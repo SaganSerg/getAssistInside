@@ -1,0 +1,470 @@
+<style>
+    form {
+        padding-bottom: 10px;
+    }
+</style>
+<form id="registration">
+    <fieldset>
+        <legend>Registration</legend>
+        <label>login<input type="text" name="login"></label>
+        <label>password<input type="password" name="password"></label>
+        <label>name<input type="text" name="name"></label>
+        <label>surname<input type="text" name="surname"></label>
+        <label>jobtitle<input type="text" name="jobtitle"></label>
+        <label>role
+            <select name="role">
+                <option value="user">user</option>
+                <option value="supervisor">supervisor</option>
+            </select></label>
+        <label>company<input type="text" name="company"></label>
+        <button type="submit">registration</button>
+    </fieldset>
+
+</form>
+<form id="login">
+    <fieldset>
+        <legend>flesh Log in</legend>
+        <label>username<input type="text" name="login"></label>
+        <label>password<input type="password" name="password"></label>
+        <button type="submit">login</button>
+    </fieldset>
+</form>
+<form id="killtoken">
+    <fieldset>
+        <legend>flesh kill token</legend>
+        <label><input type="text" name="token"></label>
+        <button type="submit">token</button>
+    </fieldset>
+</form>
+<form id="makeQRcode">
+    <fieldset>
+        <legend>makeQRcode</legend>
+        <label><input type="number" name="add"></label>
+        <button type="submit">add qr-code</button>
+    </fieldset>
+</form>
+<form id="makebarcode">
+    <fieldset>
+        <legend>makebarcode</legend>
+        <label><input type="number" name="add"></label>
+        <button type="submit">add barcode</button>
+    </fieldset>
+</form>
+{{!-- надо доделать getNewID token, barcode, qrcode, type, role --}}
+{{!-- 'MASTER', 'SLAVE', 'NOTHING' --}}
+<form id="getNewID">
+    <fieldset>
+        <legend>flesh getNewID</legend>
+        <label>token<input type="text" name="token"></label>
+        <label>barcode<input type="text" name="barcode"></label>
+        <label>qrcode<input type="text" name="qrcode"></label>
+        <label>type<input type="text" name="type"></label>
+        <label>role
+            <select name="role">
+                <option value="MASTER">MASTER</option>
+                <option value="SLAVE">SLAVE</option>
+                <option value="NOTHING">NOTHING</option>
+            </select></label>
+        <button type="submit">getNewID</button>
+    </fieldset>
+</form>
+{{!-- token, id, mac --}}
+<form id="setMAC">
+    <fieldset>
+        <legend>flesh setMAC</legend>
+        <label>token<input type="text" name="token"></label>
+        <label>id<input type="text" name="id"></label>
+        <label>mac<input type="text" name="mac"></label>
+        <button type="submit">getNewID</button>
+    </fieldset>
+</form>
+{{!-- token, id, prodTime и fwVersion --}}
+<form id="prodReport">
+    <fieldset>
+        <legend>flesh prodReport</legend>
+        <label>token<input type="text" name="token"></label>
+        <label>id<input type="text" name="id"></label>
+        <label>prodTime<input type="text" name="prodTime"></label>
+        <label>fwVersion<input type="text" name="fwVersion"></label>
+        <button type="submit">prodReport</button>
+    </fieldset>
+</form>
+<form id="resetlogin">
+    <fieldset>
+        <legend>Reset Log in</legend>
+        <label>username<input type="text" name="login"></label>
+        <label>password<input type="password" name="password"></label>
+        <button type="submit">login</button>
+    </fieldset>
+</form>
+<form id="resetclosesession">
+    <fieldset>
+        <legend>reset closeSession</legend>
+        <label>token<input type="text" name="token"></label>
+        <button type="submit">token</button>
+    </fieldset>
+</form>
+<form id="resetDeleteID"> 
+    <fieldset>
+        <legend>reset delete id</legend>
+        <label>token<input type="text" name="token"></label>
+        <label>field<input type="text" name="field"></label>
+        <label>value<input type="text" name="value"></label>
+        <button type="submit">resetDeleteID</button>
+    </fieldset>
+</form>
+{{!-- <form id="token">
+    <fieldset>
+        <legend>test token</legend>
+        <label><input type="text" name="token"></label>
+        <button type="submit">token</button>
+    </fieldset>
+
+</form> --}}
+{{!-- <form id="sendemailpass">
+    <fieldset>
+        <legend>Sent email pass</legend>
+        <label>username<input type="text" name="username"></label>
+        <button type="submit">send email pass</button>
+    </fieldset>
+
+</form> --}}
+{{!-- <form id="newpassword">
+    <fieldset>
+        <legend>New password</legend>
+        <label>new password<input type="text" name="token"></label>
+        <label>new password<input type="password" name="password"></label>
+        <button type="submit">send email pass</button>
+    </fieldset>
+
+</form> --}}
+{{!-- <form id="logout">
+    <fieldset>
+        <legend>logout</legend>
+        <label>token<input type="text" name="token"></label>
+        <button type="submit">logout</button>
+    </fieldset>
+
+</form> --}}
+{{!-- <form id="refreshtoken">
+    <fieldset>
+        <legend>refreshtoken</legend>
+        <label>longToken<input type="text" name="longToken"></label>
+        <button type="submit">refreshtoken</button>
+    </fieldset>
+</form> --}}
+{{!-- <form id="test">
+    <fieldset>
+        <legend>test</legend>
+        <label>token<input type="text" name="token"></label>
+        <button type="submit">test</button>
+    </fieldset>
+</form> --}}
+{{!-- <form id="experiment">
+    <label>data<input type="text" name='data'></label>
+    <button type="submit">send data</button>
+</form> --}}
+<script>
+    /* document.getElementById('experiment').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({data: form.elements.data.value})
+        fetch('http://localhost:3000/api/experiment-db', {
+            method: 'POST',
+            headers: new Headers({'Content-Type': 'application/json'}),
+            body
+        })
+    }) */
+    /*
+    document.getElementById('test').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            token: form.elements.token.value
+        })  
+        fetch('http://localhost:3000/api/test', {
+            method: 'POST',
+            headers: new Headers(
+                {
+                    'Content-Type': 'application/json'
+                }
+            ),
+            body
+        })  
+    })
+    */
+    /*
+    document.getElementById('refreshtoken').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            longToken: form.elements.longToken.value
+        })  
+        fetch('http://localhost:3000/api/refreshtoken', {
+            method: 'POST',
+            headers: new Headers(
+                {
+                    'Content-Type': 'application/json'
+                }
+            ),
+            body
+        })  
+    })
+    */
+    /*
+    document.getElementById('logout').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            token: form.elements.token.value
+        })
+        fetch('http://localhost:3000/api/logout', {
+            method: 'POST',
+            headers: new Headers({
+                'Content-Type': 'application/json'
+            }),
+            body
+        })
+    })
+    */
+    /*
+    document.getElementById('newpassword').addEventListener('submit', (evt) => { // не закончено
+        evt.preventDefault();
+        const form = evt.target
+        const body = JSON.stringify({
+            username: form.elements.username.value,
+            password: form.elements.password.value,
+            email: form.elements.email.value
+        })
+        fetch('http://localhost:3000/api/signup', {
+            method: 'POST',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+            }),
+            body
+        })
+    })
+    */
+    document.getElementById('registration').addEventListener('submit', (evt) => {
+        evt.preventDefault();
+        const form = evt.target
+        const body = JSON.stringify({
+            login: form.elements.login.value,
+            password: form.elements.password.value,
+            name: form.elements.name.value,
+            role: form.elements.role.value,
+            surname: form.elements.surname.value,
+            jobtitle: form.elements.jobtitle.value,
+            company: form.elements.company.value
+        })
+        fetch('https://localhost/ytrwerewpoyhgjkjsgskhgqrazxcvbnmjhdfgtyiuoplhjgdnb', {
+            method: 'POST',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+            }),
+            body
+        })
+    })
+
+    document.getElementById('login').addEventListener('submit', (evt) => {
+        evt.preventDefault();
+        const form = evt.target
+        const body = JSON.stringify({
+            login: form.elements.login.value,
+            password: form.elements.password.value
+        })
+        fetch('https://localhost/flash/login', {
+            method: 'POST',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+            }),
+            body
+        })
+    })
+    document.getElementById('killtoken').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            token: form.elements.token.value
+        })
+        fetch('https://localhost/flash/closeSession', {
+            method: 'POST',
+            headers: new Headers(
+                {
+                    'Content-Type': 'application/json'
+                }
+            ),
+            body
+        })
+    })
+    document.getElementById('makeQRcode').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            add: form.elements.add.value
+        })
+        fetch('https://localhost/ejkhkejhkejmjhjhsuyeuyuysjhjguydkbnbvcvczwemvlhhuyupou', {
+            method: 'POST',
+            headers: new Headers(
+                {
+                    'Content-Type': 'application/json'
+                }
+            ),
+            body
+        })
+    })
+    document.getElementById('makebarcode').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            add: form.elements.add.value
+        })
+        fetch('https://localhost/weewqewqdsdsadsacxcxzcytrytryghgfnbnbvnbvfgdgfdrewrd', {
+            method: 'POST',
+            headers: new Headers(
+                {
+                    'Content-Type': 'application/json'
+                }
+            ),
+            body
+        })
+    })
+    document.getElementById('getNewID').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            token: form.elements.token.value,
+            barcode: form.elements.barcode.value,
+            qrcode: form.elements.qrcode.value,
+            type: form.elements.type.value,
+            role: form.elements.role.value
+        })
+        fetch('https://localhost/flash/getNewID', {
+            method: 'POST',
+            headers: new Headers(
+                {
+                    'Content-Type': 'application/json'
+                }
+            ),
+            body
+        })
+    })
+    document.getElementById('setMAC').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            token: form.elements.token.value,
+            id: form.elements.id.value,
+            mac: form.elements.mac.value
+        })
+        fetch('https://localhost/flash/setMAC', {
+            method: 'POST',
+            headers: new Headers(
+                {
+                    'Content-Type': 'application/json'
+                }
+            ),
+            body
+        })
+    })
+    document.getElementById('prodReport').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            token: form.elements.token.value,
+            id: form.elements.id.value,
+            prodTime: form.elements.prodTime.value,
+            fwVersion: form.elements.fwVersion.value
+        })
+        fetch('https://localhost/flash/prodReport', {
+            method: 'POST',
+            headers: new Headers(
+                {
+                    'Content-Type': 'application/json'
+                }
+            ),
+            body
+        })
+    })
+    document.getElementById('resetlogin').addEventListener('submit', (evt) => {
+        evt.preventDefault();
+        const form = evt.target
+        const body = JSON.stringify({
+            login: form.elements.login.value,
+            password: form.elements.password.value
+        })
+        fetch('https://localhost/reset/login', {
+            method: 'POST',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+            }),
+            body
+        })
+    })
+    document.getElementById('resetclosesession').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            token: form.elements.token.value
+        })
+        fetch('https://localhost/reset/closeSession', {
+            method: 'POST',
+            headers: new Headers(
+                {
+                    'Content-Type': 'application/json'
+                }
+            ),
+            body
+        })
+    })
+    document.getElementById('resetDeleteID').addEventListener('submit', (evt) => {
+        evt.preventDefault()
+        const form = evt.target
+        const body = JSON.stringify({
+            token: form.elements.token.value,
+            field: form.elements.field.value,
+            value: form.elements.value.value,
+        })
+        fetch('https://localhost/reset/deleteID', {
+            method: 'POST',
+            headers: new Headers(
+                {
+                    'Content-Type': 'application/json'
+                }
+            ),
+            body
+        })
+    })
+    /*
+        document.getElementById('token').addEventListener('submit', (evt) => {
+            evt.preventDefault();
+            const form = evt.target
+            const body = JSON.stringify({
+                token: form.elements.token.value,
+            })
+            fetch('http://localhost:3000/api/test', {
+                method: 'POST',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                }),
+                body
+            })
+        })
+    */
+    /*
+        document.getElementById('sendemailpass').addEventListener('submit', (evt) => {
+            evt.preventDefault();
+            const form = evt.target
+            const body = JSON.stringify({
+                username: form.elements.username.value,
+            })
+            fetch('http://localhost:3000/api/sendemailpass', {
+                method: 'POST',
+                headers: new Headers({
+                    'Content-Type': 'application/json',
+                }),
+                body
+            })
+        })
+    */
+</script>

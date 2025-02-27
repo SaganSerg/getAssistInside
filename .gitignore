@@ -1,0 +1,9 @@
+node_modules
+access.log
+.credentials.development.json
+.credentials.production.json
+.credentials.test.json
+*.crt
+*.pem
+ОПИСАНИЕ_взаимодействия_по_процессу_прошивка_Гречук_19_01.docx
+ОПИСАНИЕ_взаимодействия_по_процессу_сброс_Гречук_19_01.docx

@@ -1,0 +1,43 @@
+Vasa user
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6IlZhc2EiLCJ1c2VySWQiOjQsInRva2VuSWQiOjE4LCJyb2xlIjoidXNlciIsImlhdCI6MTc0MDY1MDY2NywiZXhwIjoxNzQwNzM3MDY3fQ.JWd7aDXeb5tOAfqLi4o-HGaDg2IfU_fjZofWlX7cAYM"
+bar 1 qr 1 type 10 slave
+{"code":0,"descr":"OK","id":7}
+
+
+
+Tosa superviser
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6IlRvc2EiLCJ1c2VySWQiOjMsInRva2VuSWQiOjIyLCJyb2xlIjoic3VwZXJ2aXNvciIsImlhdCI6MTc0MDY1MjI3MywiZXhwIjoxNzQwNzM4NjczfQ.EA-q4qa1dV-RaHFDRToURELGZ9qqgRr6CQukFJ4bl7s"
+
+Rima superviser
+
+Nina user
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJsb2dpbiI6Ik5pbmEiLCJ1c2VySWQiOjYsInRva2VuSWQiOjIxLCJyb2xlIjoidXNlciIsImlhdCI6MTc0MDY1MTk0OSwiZXhwIjoxNzQwNzM4MzQ5fQ.1u0QGt1gPSRO3785QNzd1h4dJ6in_hSuzJSYUHR7mOU"
+
+{"code":0,"descr":"OK","id":8}
+
+00:AB:CD:EF:11:22
+01:AB:CD:EF:11:22
+02:AB:CD:EF:11:22
+03:AB:CD:EF:11:22
+04:AB:CD:EF:11:22
+
+
+delete from barcodes;
+delete from qrcodes;
+
+delete from users;
+
+
+
+
+delete from deleteddevices;
+delete from devices;
+delete from accessblockebylogin;
+delete from tokens;
+
+Проверки:
+1) Отмена "Галей" дивайса на первом этапе, до присвоения MAC
+2) Отмена "Галей" дивайса на втором этапе, после присвоения MAC 
+3) Отмена "Галей" девайса после полной регистрации. (работет!)
+3) Протестировать работу регистрации дивайса при смене токена на каждом этапе (работает!)
+4) Протестировать работу регистрации при регистрации девайса сначала одним пользователем, а последующие этапы другим пользователем. (работает!)
