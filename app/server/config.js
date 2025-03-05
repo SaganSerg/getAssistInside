@@ -1,3 +1,4 @@
+const credentials = require(`./.credentials.${process.env.NODE_ENV || 'development'}`)
 const oneHour = 60 * 60 // в секундах
 const oneMinutesMMSecond = 60 * 1000 // в миллисекундах
 const oneHourMMSecond = oneHour * 1000 // в миллисекундах
@@ -5,11 +6,11 @@ const oneDaySecond = oneHour * 24 // в секундах
 const oneDayMMSecond = oneDaySecond * 1000 // в миллисекундах
 
 module.exports = { 
-    credentials: require(`./.credentials.${process.env.NODE_ENV || 'development'}`), 
+    credentials, 
     // это БД с данными
     host: 'localhost', 
     user: 'admin_getAssistInside', 
-    password: 'Vagon_3611',
+    password: credentials.adminGetAssistInsidePass,
     database: 'getAssistInside',
 
     

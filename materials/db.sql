@@ -8,10 +8,10 @@ DROP database getAssistInsideSessions;
 -- ALTER TABLE table_name AUTO_INCREMENT = 1;
 -- DROP TABLE sometable;
 CREATE DATABASE getAssistInside CHARACTER SET utf8mb4 COLLATE = utf8mb4_unicode_ci;
-CREATE USER 'admin_getAssistInside'@'localhost' IDENTIFIED BY 'Vagon_3611'; 
+CREATE USER 'admin_getAssistInside'@'localhost' IDENTIFIED BY 'Vagon_3611'; -- RekbyfhElfhbkCkjyf
 GRANT SELECT, INSERT, UPDATE, DELETE  ON getAssistInside.* TO 'admin_getAssistInside'@'localhost';
 
-ALTER USER 'admin_getAssistInside'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Vagon_3611';
+ALTER USER 'admin_getAssistInside'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Vagon_3611'; -- RekbyfhElfhbkCkjyf
 
 USE getAssistInside;
 
@@ -45,11 +45,6 @@ INSERT INTO qrcodes (qrcodes_value) VALUES (1);
 INSERT INTO qrcodes (qrcodes_value) VALUES (LAST_INSERT_ID() + 1);
 */
 -- ALTER TABLE qrcodes AUTO_INCREMENT = 1;
-['1',	'2',	'3',	'4', 	'5', 	'6', 	'7', 	'8', 	'9', '0',
-'A', 	'B', 	'C', 	'D', 	'E', 	'F', 	'G', 	'H', 	'I', 	'J', 	'K', 	'L', 	'M', 	'N', 	'O', 'P', 	'Q', 	'R', 	'S', 	'T', 	'U', 	'V', 	'W', 	'X', 	'Y', 	'Z',
-'a', 	'b', 	'c', 	'd', 	'e', 	'f', 	'g', 	'h', 	'i', 	'j', 	'k', 	'l', 	'm', 	'n', 	'o', 'p', 	'q', 	'r', 	's', 	't', 	'u', 	'v', 	'w', 	'x', 	'y', 	'z']
-
-
 CREATE TABLE users
 (
   users_id INT UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,

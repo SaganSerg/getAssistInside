@@ -16,7 +16,7 @@ const express = require('express'),
     cluster = require('cluster')
 // https = require('https') // это может быть использовано, в случае если нужен https без nginx 
 
-const urlResetPass = 'reset' // это url я вынес в переменную, потому что он используется в двух местах
+// const urlResetPass = 'reset' // это url я вынес в переменную, потому что он используется в двух местах
 
 /* это нужно использовать если нужен будет https без nginx */
 // const options = {
@@ -443,15 +443,19 @@ app.use(session({
 // app.use(passport.authenticate('session')); // c этим все работало
 app.use(bodyParser.urlencoded({ extended: true }))
 
-app.get('/', passport.authenticate('session'), handlers.homeGet)
+// app.get('/', passport.authenticate('session'), handlers.homeGet)
+app.get('/', (req, res) => {
+    res.type('text/plain')
+    res.send('Hi')
 
-app.get('/login', passport.authenticate('session'), handlers.loginGet)
+})
+// app.get('/login', passport.authenticate('session'), handlers.loginGet)
 // app.post('/login/password', passport.authenticate('local', {
 //     successRedirect: '/',
 //     failureRedirect: '/login'
 // }));
 // let username = req.user ? req.user.username : 'Не актуализирован'
-app.post('/login/password', passport.authenticate('local', { failureRedirect: '/login' }), handlers.loginPasswordPost)
+// app.post('/login/password', passport.authenticate('local', { failureRedirect: '/login' }), handlers.loginPasswordPost)
 /* 
 Это то что в req.user
 Похоже полностью повторяет то, что хранистя в БД
@@ -466,9 +470,9 @@ app.post('/login/password', passport.authenticate('local', { failureRedirect: '/
   delete_: 0
 }
 */
-app.post('/logout', passport.authenticate('session'), handlers.logoutPost)
+// app.post('/logout', passport.authenticate('session'), handlers.logoutPost)
 
-app.get('/signup', passport.authenticate('session'), handlers.signupGet)
+// app.get('/signup', passport.authenticate('session'), handlers.signupGet)
 /* 
 Вот что сохраняется в БД в таблице sessions
 
@@ -516,7 +520,7 @@ router.post('/signup', function(req, res, next) {
 });
 
 */
-app.post('/signup', passport.authenticate('session'), handlers.signupPost)
+// app.post('/signup', passport.authenticate('session'), handlers.signupPost)
 /* 
 rows INSERT
 
@@ -872,8 +876,8 @@ app.post('/reset/deleteID', authenticateToken, tokenExtension, (req, res, next) 
     // role body.user.role
     const body = req?.body
 
-    if (req.user?.role !== 'supervisor') return res.status(400).json({code: 20, descr: 'У Вас нет прав на это действие'})
-    
+    if (req.user?.role !== 'supervisor') return res.status(400).json({ code: 20, descr: 'У Вас нет прав на это действие' })
+
     const field = body?.field
     const value = body?.value
     if (!field || !value) return res.status(400).json({ code: 6, descr: 'Invalid query structure' }) // ответ согласовать
@@ -948,10 +952,10 @@ app.post('/reset/deleteID', authenticateToken, tokenExtension, (req, res, next) 
             if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
             db.run(`DELETE FROM devices WHERE ${dbName} = ?`, [value], (err, deleteDevicesRow) => {
                 if (err) {
-                    db.run(`DELETE FROM deleteddevices WHERE deleteddevices_id = ?`, [insertDeleteddevices.insertId], () => {})
+                    db.run(`DELETE FROM deleteddevices WHERE deleteddevices_id = ?`, [insertDeleteddevices.insertId], () => { })
                     return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
                 }
-                const jsonResponse = {code: 12, descr: '', needErase: 'no'} // ответ нужно будет согласовать
+                const jsonResponse = { code: 12, descr: '', needErase: 'no' } // ответ нужно будет согласовать
                 if (selectDevicesRow[0].devices_mac) jsonResponse.needErase = 'yes'
                 return res.status(200).json(jsonResponse)
             })
@@ -959,6 +963,7 @@ app.post('/reset/deleteID', authenticateToken, tokenExtension, (req, res, next) 
     })
 })
 
+/*
 app.post('/api/signup', function (req, res, next) {
     const username = req.body.username
     db.run('SELECT * FROM users WHERE username = ?', [username], (err, row) => {
@@ -982,7 +987,9 @@ app.post('/api/signup', function (req, res, next) {
         });
     })
 })
+*/
 
+/*
 app.post('/api/login/password', passport.authenticate('local', {
     failureRedirect: '/api/loginfailer'
 }), (req, res, next) => {
@@ -1003,7 +1010,9 @@ app.post('/api/login/password', passport.authenticate('local', {
 app.get('/api/loginfailer', (req, res, next) => {
     res.status(200).json({ request: 'bad', message: 'Not right login of pass' });
 })
+*/
 
+/*
 app.post('/api/logout', authenticateToken, (req, res, next) => { // по данному урлу мы не можем сделать токен не действительным, мы просто удаляем запись об подключенных устройствах
     // req.user -- здесь хранятся данные после расшифровки из токена
     db.run('UPDATE connections SET delete_ = 1 WHERE id = ?', [req.user.connectionId], (err, rows) => {
@@ -1011,6 +1020,9 @@ app.post('/api/logout', authenticateToken, (req, res, next) => { // по дан�
         res.status(200).json({ request: 'good', message: 'Your gadget is not on air' })
     })
 })
+*/
+
+/*
 app.post('/api/refreshtoken', authenticateLongToken, (req, res, next) => { // от клиента должен приходить параметер longToken.
     const { username, connectionId, usersId } = req.user
     const params = { username, connectionId, usersId }
@@ -1035,18 +1047,25 @@ app.post('/api/refreshtoken', authenticateLongToken, (req, res, next) => { // о
         longToken: getTokenFunction(params, credentials.longTokenSecret)(longTokenExpire)
     })
 })
+
+*/
+
+/*
 app.post('/api/test', authenticateToken, (req, res) => { // это реально тестовая вещь
     // const username = req.user.username;
     // res.status(200).json({ username });
     const user = req.user
     res.status(200).json(user)
 })
+*/
 
 // usersId, connectionId: rows.insertId
+
+/*
 app.post('/api/sendemailpass', (req, res, next) => { // в данном запросе мы не ждем токен, потому что  это восстановление пароля и пользователь не помнить ничего кроме логина
-    /* 
-    по данному запросу мы не проводим регистрацию пользователя в подключенных, потому что он еще не авторизован
-    */
+    
+    // по данному запросу мы не проводим регистрацию пользователя в подключенных, потому что он еще не авторизован
+    
     const { username } = req.body
 
 
@@ -1090,6 +1109,10 @@ app.post('/api/sendemailpass', (req, res, next) => { // в данном запр
         });
     })
 })
+
+*/
+
+/*
 app.get(`/api/${urlResetPass}/:token`, (req, res, next) => {
     const { token } = req.params;
     jwt.verify(token, credentials.emailTokenSecret, (err, decoded) => {
@@ -1101,6 +1124,9 @@ app.get(`/api/${urlResetPass}/:token`, (req, res, next) => {
         return res.render('reset-pass', params)
     })
 })
+*/
+
+/*
 app.post('/api/reset-pass', (req, res, next) => {
     const { token, password } = req.body
     console.log('this token', token)
@@ -1141,6 +1167,9 @@ app.post('/api/reset-pass', (req, res, next) => {
         })
     })
 })
+    */
+
+
 // app.post('/api/experiment-db', (req, res, next) => {
 //     const { data } = req.body
 //     db.run('UPDATE experiment SET data = ? WHERE id = 2', [data], (err, row) => {
@@ -1161,15 +1190,15 @@ app.get('/testform', (req, res, next) => res.render('testform'))
 // пишу адрес странички чтобы удобней было копировать http://localhost:3000/testform
 // https://localhost/testform
 // это конец тестового участка кода
-app.get('/fail', (req, res) => {
-    throw new Error('Nope!')
-})
-app.get('/epic-fail', (req, res) => {
-    process.nextTick(() => {
-        throw new Error('Kaboom!')
-    })
-    res.send('embarrased')
-})
+// app.get('/fail', (req, res) => {
+//     throw new Error('Nope!')
+// })
+// app.get('/epic-fail', (req, res) => {
+//     process.nextTick(() => {
+//         throw new Error('Kaboom!')
+//     })
+//     res.send('embarrased')
+// })
 // custom 404 page
 app.use((req, res) => {
     res.type('text/plain')
@@ -1184,6 +1213,7 @@ app.use((err, req, res, next) => {
     res.send('500 - Server Error')
 })
 
+// npm install -g forever
 // forever start app.js
 // forever restart app.js
 // forever stop app.js

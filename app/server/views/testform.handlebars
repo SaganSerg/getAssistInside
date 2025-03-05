@@ -2,7 +2,27 @@
     form {
         padding-bottom: 10px;
     }
+    .appear {
+        pointer-events: auto;
+    }
+    .unactive {
+        pointer-events: none;
+    }
 </style>
+<form id="chooseEnvironment">
+<fieldset>
+    <legend>Choose Environment</legend>
+    <label> Environment
+        <select name="environment">
+            <option value="test">test</option>
+            <option value="production">production</option>
+            <option value="development">development</option>
+        </select>
+        <button type="submit">login</button>
+    </label>
+</fieldset>
+</form>
+<div id="forms" class="unactive">
 <form id="registration">
     <fieldset>
         <legend>Registration</legend>
@@ -164,7 +184,25 @@
     <label>data<input type="text" name='data'></label>
     <button type="submit">send data</button>
 </form> --}}
+</div>
 <script>
+    let domen = null
+    document.getElementById('chooseEnvironment').addEventListener('submit', (evt) => {
+        evt.preventDefault() 
+        const environmentValue = {
+            test: {
+                domen: 'localhost'
+            },
+            production: {
+                domen: 'getoff.online'
+            },
+            development: {
+                domen: 'localhost'
+            }
+        }
+        domen = environmentValue[evt.target.elements.environment.value].domen
+        document.getElementById('forms').setAttribute('class', 'appear')
+    })
     /* document.getElementById('experiment').addEventListener('submit', (evt) => {
         evt.preventDefault()
         const form = evt.target
@@ -257,7 +295,7 @@
             jobtitle: form.elements.jobtitle.value,
             company: form.elements.company.value
         })
-        fetch('https://localhost/ytrwerewpoyhgjkjsgskhgqrazxcvbnmjhdfgtyiuoplhjgdnb', {
+        fetch(`https://${domen}/ytrwerewpoyhgjkjsgskhgqrazxcvbnmjhdfgtyiuoplhjgdnb`, {
             method: 'POST',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -273,7 +311,8 @@
             login: form.elements.login.value,
             password: form.elements.password.value
         })
-        fetch('https://localhost/flash/login', {
+        console.log(`https://${domen}/flash/login`)
+        fetch(`https://${domen}/flash/login`, {
             method: 'POST',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -287,7 +326,7 @@
         const body = JSON.stringify({
             token: form.elements.token.value
         })
-        fetch('https://localhost/flash/closeSession', {
+        fetch(`https://${domen}/flash/closeSession`, {
             method: 'POST',
             headers: new Headers(
                 {
@@ -303,7 +342,7 @@
         const body = JSON.stringify({
             add: form.elements.add.value
         })
-        fetch('https://localhost/ejkhkejhkejmjhjhsuyeuyuysjhjguydkbnbvcvczwemvlhhuyupou', {
+        fetch(`https://${domen}/ejkhkejhkejmjhjhsuyeuyuysjhjguydkbnbvcvczwemvlhhuyupou`, {
             method: 'POST',
             headers: new Headers(
                 {
@@ -319,7 +358,7 @@
         const body = JSON.stringify({
             add: form.elements.add.value
         })
-        fetch('https://localhost/weewqewqdsdsadsacxcxzcytrytryghgfnbnbvnbvfgdgfdrewrd', {
+        fetch(`https://${domen}/weewqewqdsdsadsacxcxzcytrytryghgfnbnbvnbvfgdgfdrewrd`, {
             method: 'POST',
             headers: new Headers(
                 {
@@ -339,7 +378,7 @@
             type: form.elements.type.value,
             role: form.elements.role.value
         })
-        fetch('https://localhost/flash/getNewID', {
+        fetch(`https://${domen}/flash/getNewID`, {
             method: 'POST',
             headers: new Headers(
                 {
@@ -357,7 +396,7 @@
             id: form.elements.id.value,
             mac: form.elements.mac.value
         })
-        fetch('https://localhost/flash/setMAC', {
+        fetch(`https://${domen}/flash/setMAC`, {
             method: 'POST',
             headers: new Headers(
                 {
@@ -376,7 +415,7 @@
             prodTime: form.elements.prodTime.value,
             fwVersion: form.elements.fwVersion.value
         })
-        fetch('https://localhost/flash/prodReport', {
+        fetch(`https://${domen}/flash/prodReport`, {
             method: 'POST',
             headers: new Headers(
                 {
@@ -393,7 +432,7 @@
             login: form.elements.login.value,
             password: form.elements.password.value
         })
-        fetch('https://localhost/reset/login', {
+        fetch(`https://${domen}/reset/login`, {
             method: 'POST',
             headers: new Headers({
                 'Content-Type': 'application/json',
@@ -407,7 +446,7 @@
         const body = JSON.stringify({
             token: form.elements.token.value
         })
-        fetch('https://localhost/reset/closeSession', {
+        fetch(`https://${domen}/reset/closeSession`, {
             method: 'POST',
             headers: new Headers(
                 {
@@ -425,7 +464,7 @@
             field: form.elements.field.value,
             value: form.elements.value.value,
         })
-        fetch('https://localhost/reset/deleteID', {
+        fetch(`https://${domen}/reset/deleteID`, {
             method: 'POST',
             headers: new Headers(
                 {
