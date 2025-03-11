@@ -1222,7 +1222,7 @@ process.on('uncaughtException', err => {
     process.exit(1)
 })
 function startServer(port) {
-    app.listen(port, () => console.log(
+    app.listen(port, '127.0.0.1', () => console.log(
         `Express started on http://localhost:${port}; ` +
         ` ${app.get('env')} ` +
         `press Ctrl-C to terminate.`))
