@@ -240,19 +240,18 @@ const transporter = nodemailer.createTransport({
 const authenticateToken = (req, res, next) => { // эта фукнция и фукнция authenticateLongToken очень похожи --- отличаются только req.body.token и credentials.tokenSecret. поэтому лучше эти функции получать через одну функцию
     const token = req?.body?.token;
     if (!token) {
-        return res.status(401).json({ request: 'error', message: 'Unauthorized: Token missing' }); // надо согласовть
+        return res.status(401).json({ code: 1, descr: 'Неавторизован: отсутсвует токен' }); // надо согласовть
     }
 
     jwt.verify(token, credentials.tokenSecret, (err, decoded) => {
         if (err) {
-            return res.status(403).json({ request: 'error', message: 'Unauthorized: Invalid token' }); // надо согласовать
+            return res.status(403).json({ code: 1, descr: 'Неавторизован: ошибочный токен' }); // надо согласовать
         }
         const now = new Date()
         const nowMinus10Minutes = getTimeForMySQL(now.setMinutes(now.getUTCMinutes() - 10))
         db.run('SELECT * FROM tokens WHERE tokens_id = ? AND tokens_extension_time > ?', [decoded?.tokenId, nowMinus10Minutes], (err, selectTokensRow) => {
-            console.log(nowMinus10Minutes)
-            if (err) return res.status(500).json({ code: 5, descr: 'Something went wrong' }) // надо согласовать
-            if (!selectTokensRow.length) return res.status(403).json({ request: 'error', message: 'Unauthorized: Invalid token' }); // надо согласовать
+            if (err) return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // надо согласовать
+            if (!selectTokensRow.length) return res.status(403).json({ code: 1, descr: 'Неавторизован: ошибочный токен' }); // надо согласовать
             req.user = decoded;
             // console.log(decoded) // { username: 'vasa', iat: 1707980883, exp: 1710572883 } я еще добавил другое свойство 
             // { login, userId: selectUsersRow[0].users_id, tokenId: insertTokensRow.insertId }
@@ -263,7 +262,7 @@ const authenticateToken = (req, res, next) => { // эта фукнция и фу
 };
 const tokenExtension = (req, res, next) => {
     db.run('UPDATE tokens SET tokens_extension_time = ? WHERE tokens_id = ?', [getTimeForMySQL(new Date()), req?.user?.tokenId], (err, updateTokensRow) => {
-        if (err) return res.status(500).json({ code: 5, descr: 'Something went wrong' }) // надо согласовать
+        if (err) return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // надо согласовать
         next()
     })
 }
@@ -447,7 +446,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.get('/', (req, res) => {
     res.type('text/plain')
     res.send('Hi')
-
 })
 // app.get('/login', passport.authenticate('session'), handlers.loginGet)
 // app.post('/login/password', passport.authenticate('local', {
@@ -585,7 +583,7 @@ app.post('/ejkhkejhkejmjhjhsuyeuyuysjhjguydkbnbvcvczwemvlhhuyupou', (req, res, n
         
         [ RowDataPacket { 'MAX(qrcodes_id)': null } ] -- если записей нет
         */
-        if (err) return res.status(500).json({ request: 'error', message: err.message })
+        if (err) return res.status(500).json({ code: 'error', descr: 'Что-то пошло не так' })
         let SQLrequest = "INSERT INTO qrcodes (qrcodes_value) VALUES "
         const SQLrequestValues = []
         for (let i = 0, id = Number(selectQrcodesRow[0]['MAX(qrcodes_id)']) + 1; i < add; i++, id++) {
@@ -596,8 +594,8 @@ app.post('/ejkhkejhkejmjhjhsuyeuyuysjhjguydkbnbvcvczwemvlhhuyupou', (req, res, n
 
         }
         db.run(SQLrequest, SQLrequestValues, (err, insertQrcodesRow) => {
-            if (err) return res.status(500).json({ request: 'error', message: err.message })
-            return res.status(200).json({ res: 'ok' })
+            if (err) return res.status(500).json({ code: 1, descr: err.message })
+            return res.status(200).json({ code: 0, descr: 'OK' })
         })
     })
 })
@@ -605,7 +603,7 @@ app.post('/ejkhkejhkejmjhjhsuyeuyuysjhjguydkbnbvcvczwemvlhhuyupou', (req, res, n
 app.post('/weewqewqdsdsadsacxcxzcytrytryghgfnbnbvnbvfgdgfdrewrd', (req, res, next) => {
     const add = Number(req?.body?.add)
     db.run('SELECT MAX(barcodes_id) FROM barcodes', [], (err, selectBarcodesRow) => {
-        if (err) return res.status(500).json({ request: 'error', message: err.message })
+        if (err) return res.status(500).json({ code: 1, descr: err.message })
         let SQLrequest = "INSERT INTO barcodes (barcodes_value) VALUES "
         const SQLrequestValues = []
         for (let i = 0, id = Number(selectBarcodesRow[0]['MAX(barcodes_id)']) + 1; i < add; i++, id++) {
@@ -614,8 +612,8 @@ app.post('/weewqewqdsdsadsacxcxzcytrytryghgfnbnbvnbvfgdgfdrewrd', (req, res, nex
             SQLrequestValues.push(id)
         }
         db.run(SQLrequest, SQLrequestValues, (err, insertBarcodesRow) => {
-            if (err) return res.status(500).json({ request: 'error', message: err.message })
-            return res.status(200).json({ res: 'ok' })
+            if (err) return res.status(500).json({ code: 1, descr: err.message })
+            return res.status(200).json({ code: 1, descr: 'OK' })
         })
     })
 })
@@ -667,10 +665,10 @@ function preparationBeforeAuthentication(req, res, next) {
         db.run('DELETE FROM accessblockebylogin WHERE accessblockebylogin_time < ?', [getTimeForMySQL(now.setMilliseconds(now.getMilliseconds() - cleanBlokLogin))], (err) => {
             if (err) return res.status(500).json({ code: 'error', descr: err.message }) // надо будет согласовать 
             const { login, password } = req.body
-            if (!password) return res.status(401).json({ code: 3, descr: "The field of password is empty", token: '' })
+            if (!password) return res.status(401).json({ code: 1, descr: "Поле пароля пустое", token: '' })
             db.run('SELECT * FROM accessblockebylogin WHERE users_id = (SELECT users_id FROM users WHERE users_login = ?)', [login], (err, selectAccessblockebyloginRow) => {
                 if (selectAccessblockebyloginRow.length && selectAccessblockebyloginRow[0].accessblockebylogin_count >= numberOfAttempts) {
-                    return res.status(403).json({ code: 2, descr: "There have been multiple unsuccessful authentication attempts. Access to your account has been temporarily blocked." })
+                    return res.status(403).json({ code: 1, descr: "Было несколько неудачных попыток аутентификации. Доступ к вашему аккаунту временно заблокирован." })
                 }
                 req.body.username = login
                 next()
@@ -684,7 +682,7 @@ function userVerificationTokenAcquisition(req, res, next) {
     db.run('SELECT * FROM users WHERE users_login = ?', [login], (err, selectUsersRow) => {
         // code и descr
         // console.log('after select')
-        if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
+        if (err) return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // ответ нужно будет согласовать
         const now = getTimeForMySQL(new Date())
         db.run('INSERT INTO tokens (tokens_create_time, tokens_extension_time) VALUES (?, ?)', [now, now], (err, insertTokensRow) => {
             if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
@@ -703,12 +701,12 @@ app.post('/flash/login',
             // [getTimeForMySQL(now.setMilliseconds(now.getMilliseconds() - cleanConnectionsTime))]
             const now = new Date()
             db.run('DELETE FROM accessblockebylogin WHERE accessblockebylogin_time < ?', [getTimeForMySQL(now.setMilliseconds(now.getMilliseconds() - cleanBlokLogin))], (err) => {
-                if (err) return res.status(500).json({ code: 'error', descr: err.message }) // надо будет согласовать 
+                if (err) return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // надо будет согласовать 
                 const { login, password } = req.body
-                if (!password) return res.status(401).json({ code: 3, descr: "The field of password is empty", token: '' })
+                if (!password) return res.status(401).json({ code: 1, descr: "Поле пароль --- пустое", token: '' })
                 db.run('SELECT * FROM accessblockebylogin WHERE users_id = (SELECT users_id FROM users WHERE users_login = ?)', [login], (err, selectAccessblockebyloginRow) => {
                     if (selectAccessblockebyloginRow.length && selectAccessblockebyloginRow[0].accessblockebylogin_count >= numberOfAttempts) {
-                        return res.status(403).json({ code: 2, descr: "There have been multiple unsuccessful authentication attempts. Access to your account has been temporarily blocked." })
+                        return res.status(403).json({ code: 1, descr: "Было несколько неудачных попыток аутентификации. Доступ к вашему аккаунту временно заблокирован." })
                     }
                     req.body.username = login
                     next()
@@ -724,10 +722,10 @@ app.post('/flash/login',
         db.run('SELECT * FROM users WHERE users_login = ?', [login], (err, selectUsersRow) => {
             // code и descr
             // console.log('after select')
-            if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
+            if (err) return res.status(500).json({ code: 1, descr: "Что-то пошло не так" }) // ответ нужно будет согласовать
             const now = getTimeForMySQL(new Date())
             db.run('INSERT INTO tokens (tokens_create_time, tokens_extension_time) VALUES (?, ?)', [now, now], (err, insertTokensRow) => {
-                if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
+                if (err) return res.status(500).json({ code: 1, descr: "Что-то пошло не так" }) // ответ нужно будет согласовать
                 const params = { login, userId: selectUsersRow[0].users_id, tokenId: insertTokensRow.insertId, role: selectUsersRow[0].users_role }
                 res.status(200).json({
                     code: 0,
@@ -740,24 +738,24 @@ app.post('/flash/login',
 )
 
 app.get('/flash/loginfailer', (req, res, next) => {
-    return res.status(401).json({ code: 1, descr: 'Not right login of pass', token: '' }); // ответ нужно будет согласовать
+    return res.status(401).json({ code: 1, descr: 'Либо логин, либо пароль неверный', token: '' }); // ответ нужно будет согласовать
 })
 
 function closeSession(req, res, next) {
     const tokensID = req?.user?.tokenId
-    if (!tokensID) return res.status(400).json({ code: 'error', descr: 'Somthing went wrong' })
+    if (!tokensID) return res.status(400).json({ code: 1, descr: 'Что-то пошло не так' })
     db.run('DELETE FROM tokens WHERE tokens_id = ?', [tokensID], (err, deleteTokensRow) => {
-        if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
-        return res.status(200).json({ code: 4, descr: 'Token is killed' })
+        if (err) return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // ответ нужно будет согласовать
+        return res.status(200).json({ code: 0, descr: 'ok' })
     })
 }
 
 app.post('/flash/closeSession', authenticateToken, (req, res, next) => {
     const tokensID = req?.user?.tokenId
-    if (!tokensID) return res.status(400).json({ code: 'error', descr: 'Somthing went wrong' })
+    if (!tokensID) return res.status(400).json({ code: 1, descr: 'Что-то пошло не так' })
     db.run('DELETE FROM tokens WHERE tokens_id = ?', [tokensID], (err, deleteTokensRow) => {
-        if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
-        return res.status(200).json({ code: 4, descr: 'Token is killed' })
+        if (err) return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // ответ нужно будет согласовать
+        return res.status(200).json({ code: 0, descr: 'ОК' })
     })
 })
 /* 
@@ -789,30 +787,30 @@ OkPacket {
 app.post('/flash/getNewID', authenticateToken, tokenExtension, (req, res, next) => {
     // token, barcode, qrcode, type, role, 
     let { barcode, qrcode, type, role } = req.body
-    if (!barcode || !qrcode || !type || !role) return res.status(400).json({ code: 6, descr: 'Invalid query structure' }) // ответ согласовать
+    if (!barcode || !qrcode || !type || !role) return res.status(400).json({ code: 1, descr: 'Неправильная структура запроса' }) // ответ согласовать
     // нужно будет провести проверку barcode, qrcode, type, role на соответсвие ЭТО НУЖНО СДЕЛАТЬ ОБЯЗАТЕЛЬНО!!!!
     barcode = Number(barcode)
-    if (!['MASTER', 'SLAVE', 'NOTHING'].some(x => x === role)) return res.status(400).json({ code: 8, descr: 'The describer of the role is wrong.' })
-    if (type.length > 4) return res.status(400).json({ code: 9, descr: 'The type is wrong' })
+    if (!['MASTER', 'SLAVE', 'NOTHING'].some(x => x === role)) return res.status(400).json({ code: 1, descr: 'Роль имеет неправильное название' })
+    if (type.length > 4) return res.status(400).json({ code: 1, descr: 'Структура типа непривальная' })
     db.run('SELECT * FROM barcodes WHERE barcodes_id = ?', [barcode], (err, selectBarcodesRow) => {
-        if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
-        if (!selectBarcodesRow.length) return res.status(400).json({ code: 6, descr: 'This barcode is not listed.' }) // ответ нужно будет согласовать
+        if (err) return res.status(500).json({ code: 1, descr: "Что-то пошло не так" }) // ответ нужно будет согласовать
+        if (!selectBarcodesRow.length) return res.status(400).json({ code: 1, descr: 'Такого штрих-кода нет в базе' }) // ответ нужно будет согласовать
         db.run('SELECT * FROM qrcodes WHERE qrcodes_id = ?', [qrcode], (err, selectQrcodesRow) => {
-            if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
-            if (!selectQrcodesRow.length) return res.status(400).json({ code: 7, descr: 'This qrcodes is not listed.' }) // ответ нужно будет согласовать
+            if (err) return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // ответ нужно будет согласовать
+            if (!selectQrcodesRow.length) return res.status(400).json({ code: 1, descr: 'Такого qr-кода нет в базе' }) // ответ нужно будет согласовать
             db.run('SELECT * FROM devices WHERE devices_bar = ?', [barcode], (err, selectDevicesBarRow) => {
-                if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
-                if (selectDevicesBarRow.length) return res.status(400).json({ code: 'error', descr: 'This bar-code already is registered' }) // ответ нужно согласовать
+                if (err) return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // ответ нужно будет согласовать
+                if (selectDevicesBarRow.length) return res.status(400).json({ code: 1, descr: 'Данный qr-код уже зарегестрирован' }) // ответ нужно согласовать
                 db.run('SELECT * FROM devices WHERE devices_gr = ?', [qrcode], (err, selectDevicesQrRow) => {
-                    if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
-                    if (selectDevicesQrRow.length) return res.status(400).json({ code: 'error', descr: 'This qr-code alreaey is registered' }) // ответ нужно согласовать
+                    if (err) return res.status(500).json({ code: 1, descr: "Что-то пошло не так" }) // ответ нужно будет согласовать
+                    if (selectDevicesQrRow.length) return res.status(400).json({ code: 1, descr: 'Данный qr-код уже зарегестрирован' }) // ответ нужно согласовать
                     // req.user { login, userId: selectUsersRow[0].users_id, tokenId: insertTokensRow.insertId, role: selectUsersRow[0].users_role }
                     console.log(req.user)
                     db.run("INSERT INTO devices (devices_bar, devices_gr, devices_type, devices_role, devices_user_id) VALUES (?, ?, ?, ?, ?)", [barcode, qrcode, type, role, req.user.userId], (err, insertDevicesRow) => {
                         // ER_DUP_ENTRY -- такое сообщение если оба данных дублируются
                         // ER_DUP_ENTRY -- такое сообщине если только одно поле с данным дублируется
-                        if (err?.code === "ER_DUP_ENTRY") return res.status(400).json({ code: 'err', descr: err.message }) // надо проверить как работает
-                        if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
+                        if (err?.code === "ER_DUP_ENTRY") return res.status(400).json({ code: 1, descr: 'Датчик с таким qr-кодом или штрих-кодом уже был зарегистрирован' }) // надо проверить как работает
+                        if (err) return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // ответ нужно будет согласовать
                         return res.status(200).json({ code: 0, descr: 'OK', id: insertDevicesRow.insertId })
                     })
                 })
@@ -823,19 +821,19 @@ app.post('/flash/getNewID', authenticateToken, tokenExtension, (req, res, next) 
 
 app.post('/flash/setMAC', authenticateToken, tokenExtension, (req, res, next) => {
     let { id, mac } = req.body
-    if (!id || !mac) return res.status(400).json({ code: 6, descr: 'Invalid query structure' }) // ответ согласовать
+    if (!id || !mac) return res.status(400).json({ code: 1, descr: 'Неправильная структура запроса' }) // ответ согласовать
     id = Number(id)
     // ожидается структура mac с разделителями двоеточия
-    if (!/^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/.test(mac)) return res.status(400).json({ code: 15, descr: 'Invalid mac structure' })
+    if (!/^([0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}$/.test(mac)) return res.status(400).json({ code: 1, descr: 'MAC-адрес имеет неверную структуру' })
     db.run('SELECT * FROM devices WHERE devices_mac = ?', [mac], (err, selectDevicesMacRow) => {
-        if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
-        if (selectDevicesMacRow.length) return res.status(400).json({ code: 'error', descr: 'This mac alreaey is registered' }) // ответ нужно согласовать
+        if (err) return res.status(500).json({ code: 1, descr: "Что-то пошло не так" }) // ответ нужно будет согласовать
+        if (selectDevicesMacRow.length) return res.status(400).json({ code: 1, descr: 'Данный mac-адрес уже был зарегестрирован' }) // ответ нужно согласовать
         db.run('SELECT * FROM devices WHERE devices_id = ?', [id], (err, selectDevicesIdRow) => {
-            if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
-            if (selectDevicesIdRow[0].devices_user_id !== req.user?.userId) return res.status(400).json({ code: 'error', descr: 'This user is not match devise' }) // ответ нужно будет согласовать
+            if (err) return res.status(500).json({ code: 1, descr: "Что-то пошло не так" }) // ответ нужно будет согласовать
+            if (selectDevicesIdRow[0].devices_user_id !== req.user?.userId) return res.status(400).json({ code: 1, descr: 'Данный пользовател не регисрировал данный девайс' }) // ответ нужно будет согласовать
             db.run('UPDATE devices SET devices_mac = ? WHERE devices_id = ?', [mac, id], (err, updateDevicesMacRow) => {
-                if (err?.code === "ER_DUP_ENTRY") return res.status(400).json({ code: 'err', descr: err.message }) // надо проверить как работает
-                if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
+                if (err?.code === "ER_DUP_ENTRY") return res.status(400).json({ code: 1, descr: 'Датчик с таким mac-адресом уже был зарегестрироват ранее' }) // надо проверить как работает
+                if (err) return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // ответ нужно будет согласовать
                 return res.status(200).json({ code: 0, descr: 'OK' })
             })
         })
@@ -850,13 +848,13 @@ app.post('/flash/prodReport', authenticateToken, tokenExtension, (req, res, next
     const id = Number(body?.id)
     const prodTime = body?.prodTime
     const fwVersion = body?.fwVersion
-    if (!id || !prodTime || !fwVersion) return res.status(400).json({ code: 6, descr: 'Invalid query structure' }) // ответ согласовать
+    if (!id || !prodTime || !fwVersion) return res.status(400).json({ code: 1, descr: 'Неправильная структура запроса' }) // ответ согласовать
     // надо проверить формат полученных данных
     db.run('SELECT * FROM devices WHERE devices_id = ?', [id], (err, selectDevicesIdRow) => {
         if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
-        if (selectDevicesIdRow[0].devices_user_id !== req.user?.userId) return res.status(400).json({ code: 'error', descr: 'This user is not match devise' }) // ответ нужно будет согласовать
+        if (selectDevicesIdRow[0].devices_user_id !== req.user?.userId) return res.status(400).json({ code: 1, descr: 'Данный пользовател не регисрировал данный девайс' }) // ответ нужно будет согласовать
         db.run("UPDATE devices SET devices_prodtime = ?, devices_fwversion = ? WHERE devices_id = ?", [prodTime, fwVersion, id], (err, updateDevices) => {
-            if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
+            if (err) return res.status(500).json({ code: 1, descr: "Что-то пошло не так" }) // ответ нужно будет согласовать
             return res.status(200).json({ code: 0, descr: 'OK' }) // ответ нужно будет согласовать
         })
     })
@@ -867,7 +865,7 @@ app.post('/reset/login', preparationBeforeAuthentication, passport.authenticate(
 }), userVerificationTokenAcquisition)
 
 app.get('/reset/loginfailer', (req, res, next) => {
-    return res.status(401).json({ code: 1, descr: 'Not right login of pass', token: '' }); // ответ нужно будет согласовать
+    return res.status(401).json({ code: 1, descr: 'Неправильный логин или пароль', token: '' }); // ответ нужно будет согласовать
 })
 
 app.post('/reset/closeSession', authenticateToken, closeSession)
@@ -876,11 +874,11 @@ app.post('/reset/deleteID', authenticateToken, tokenExtension, (req, res, next) 
     // role body.user.role
     const body = req?.body
 
-    if (req.user?.role !== 'supervisor') return res.status(400).json({ code: 20, descr: 'У Вас нет прав на это действие' })
+    if (req.user?.role !== 'supervisor') return res.status(400).json({ code: 1, descr: 'У Вас нет прав на это действие' })
 
     const field = body?.field
     const value = body?.value
-    if (!field || !value) return res.status(400).json({ code: 6, descr: 'Invalid query structure' }) // ответ согласовать
+    if (!field || !value) return res.status(400).json({ code: 1, descr: 'Неправильная структура запроса' }) // ответ согласовать
 
     const dataList = [{ request: 'barcode', db: 'devices_bar' }, { request: 'qrcode', db: 'devices_gr' }, { request: 'mac', db: 'devices_mac' }, { request: 'id', db: 'devices_id' }]
     let dbName = ''
@@ -889,10 +887,10 @@ app.post('/reset/deleteID', authenticateToken, tokenExtension, (req, res, next) 
         dbName = element.db
         requestName = element.request
         return field === element.request
-    })) return res.status(400).json({ code: 6, descr: 'Invalid query structure' }) // ответ согласовать
+    })) return res.status(400).json({ code: 1, descr: 'Структура запроса неправильная' }) // ответ согласовать
     db.run(`SELECT * FROM devices WHERE ${dbName} = ?`, [value], (err, selectDevicesRow) => {
-        if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
-        if (!selectDevicesRow.length) return res.status(400).json({ code: 6, descr: 'Устройство с таким параметрам не зарегистрировано' }) // ответ согласовать
+        if (err) return res.status(500).json({ code: 1, descr:  "Что-то пошло не так"}) // ответ нужно будет согласовать
+        if (!selectDevicesRow.length) return res.status(400).json({ code: 1, descr: 'Устройство с таким параметрам не зарегистрировано' }) // ответ согласовать
         /* 
         selectQrcodesRow
         [ RowDataPacket { 'MAX(qrcodes_id)': 1 } ] 
@@ -949,13 +947,13 @@ app.post('/reset/deleteID', authenticateToken, tokenExtension, (req, res, next) 
             sqlRequestValues += '?'
         }
         db.run(`INSERT INTO deleteddevices (${sqlRequestFirstPart}) VALUES (${sqlRequestValues})`, sqlRequestValuesArr, (err, insertDeleteddevices) => {
-            if (err) return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
+            if (err) return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // ответ нужно будет согласовать
             db.run(`DELETE FROM devices WHERE ${dbName} = ?`, [value], (err, deleteDevicesRow) => {
                 if (err) {
                     db.run(`DELETE FROM deleteddevices WHERE deleteddevices_id = ?`, [insertDeleteddevices.insertId], () => { })
-                    return res.status(500).json({ code: 'error', descr: err.message }) // ответ нужно будет согласовать
+                    return res.status(500).json({ code: 1, descr: 'Что-то пошло не так' }) // ответ нужно будет согласовать
                 }
-                const jsonResponse = { code: 12, descr: '', needErase: 'no' } // ответ нужно будет согласовать
+                const jsonResponse = { code: 0, descr: 'ОК', needErase: 'no' } // ответ нужно будет согласовать
                 if (selectDevicesRow[0].devices_mac) jsonResponse.needErase = 'yes'
                 return res.status(200).json(jsonResponse)
             })
