@@ -563,6 +563,9 @@ req.secure
 Здесь будут подробности соединения между клиентом и сервером, а не между прокси и сервером
 req.ips -- исходный ip клиента
 */
+app.post('/testRequest', (req, res, next) => {
+    return res.status(200).json(req.body)
+})
 // это получение qr-кодов
 app.post('/ejkhkejhkejmjhjhsuyeuyuysjhjguydkbnbvcvczwemvlhhuyupou', (req, res, next) => {
     const add = Number(req?.body?.add)
@@ -1211,10 +1214,12 @@ app.use((err, req, res, next) => {
     res.send('500 - Server Error')
 })
 
+// export NODE_ENV=production
 // npm install -g forever
 // forever start app.js
 // forever restart app.js
 // forever stop app.js
+// rm -r -- удаление директории со все содержимым
 
 process.on('uncaughtException', err => {
     console.error('UNCAUGHT EXCEPTION\n', err.stack);

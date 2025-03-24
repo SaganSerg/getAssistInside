@@ -2,193 +2,213 @@
     form {
         padding-bottom: 10px;
     }
+
     .appear {
         pointer-events: auto;
     }
+
     .unactive {
         pointer-events: none;
     }
 </style>
 <form id="chooseEnvironment">
-<fieldset>
-    <legend>Choose Environment</legend>
-    <label> Environment
-        <select name="environment">
-            <option value="test">test</option>
-            <option value="production">production</option>
-            <option value="development">development</option>
-        </select>
-        <button type="submit">login</button>
-    </label>
-</fieldset>
+    <fieldset>
+        <legend>Choose Environment</legend>
+        <label> Environment
+            <select name="environment">
+                <option value="test">test</option>
+                <option value="production">production</option>
+                <option value="development">development</option>
+            </select>
+            <button type="submit">login</button>
+        </label>
+    </fieldset>
 </form>
 <div id="forms" class="unactive">
-<form id="registration">
-    <fieldset>
-        <legend>Registration</legend>
-        <label>login<input type="text" name="login"></label>
-        <label>password<input type="password" name="password"></label>
-        <label>name<input type="text" name="name"></label>
-        <label>surname<input type="text" name="surname"></label>
-        <label>jobtitle<input type="text" name="jobtitle"></label>
-        <label>role
-            <select name="role">
-                <option value="user">user</option>
-                <option value="supervisor">supervisor</option>
-            </select></label>
-        <label>company<input type="text" name="company"></label>
-        <button type="submit">registration</button>
-    </fieldset>
+    <form id="registration">
+        <fieldset>
+            <legend>Registration</legend>
+            <label>login<input type="text" name="login"></label>
+            <label>password<input type="password" name="password"></label>
+            <label>name<input type="text" name="name"></label>
+            <label>surname<input type="text" name="surname"></label>
+            <label>jobtitle<input type="text" name="jobtitle"></label>
+            <label>role
+                <select name="role">
+                    <option value="user">user</option>
+                    <option value="supervisor">supervisor</option>
+                </select></label>
+            <label>company<input type="text" name="company"></label>
+            <button type="submit">registration</button>
+        </fieldset>
 
-</form>
-<form id="login">
-    <fieldset>
-        <legend>flesh Log in</legend>
-        <label>username<input type="text" name="login"></label>
-        <label>password<input type="password" name="password"></label>
-        <button type="submit">login</button>
-    </fieldset>
-</form>
-<form id="killtoken">
-    <fieldset>
-        <legend>flesh kill token</legend>
-        <label><input type="text" name="token"></label>
-        <button type="submit">token</button>
-    </fieldset>
-</form>
-<form id="makeQRcode">
-    <fieldset>
-        <legend>makeQRcode</legend>
-        <label><input type="number" name="add"></label>
-        <button type="submit">add qr-code</button>
-    </fieldset>
-</form>
-<form id="makebarcode">
-    <fieldset>
-        <legend>makebarcode</legend>
-        <label><input type="number" name="add"></label>
-        <button type="submit">add barcode</button>
-    </fieldset>
-</form>
-{{!-- надо доделать getNewID token, barcode, qrcode, type, role --}}
-{{!-- 'MASTER', 'SLAVE', 'NOTHING' --}}
-<form id="getNewID">
-    <fieldset>
-        <legend>flesh getNewID</legend>
-        <label>token<input type="text" name="token"></label>
-        <label>barcode<input type="text" name="barcode"></label>
-        <label>qrcode<input type="text" name="qrcode"></label>
-        <label>type<input type="text" name="type"></label>
-        <label>role
-            <select name="role">
-                <option value="MASTER">MASTER</option>
-                <option value="SLAVE">SLAVE</option>
-                <option value="NOTHING">NOTHING</option>
-            </select></label>
-        <button type="submit">getNewID</button>
-    </fieldset>
-</form>
-{{!-- token, id, mac --}}
-<form id="setMAC">
-    <fieldset>
-        <legend>flesh setMAC</legend>
-        <label>token<input type="text" name="token"></label>
-        <label>id<input type="text" name="id"></label>
-        <label>mac<input type="text" name="mac"></label>
-        <button type="submit">getNewID</button>
-    </fieldset>
-</form>
-{{!-- token, id, prodTime и fwVersion --}}
-<form id="prodReport">
-    <fieldset>
-        <legend>flesh prodReport</legend>
-        <label>token<input type="text" name="token"></label>
-        <label>id<input type="text" name="id"></label>
-        <label>prodTime<input type="text" name="prodTime"></label>
-        <label>fwVersion<input type="text" name="fwVersion"></label>
-        <button type="submit">prodReport</button>
-    </fieldset>
-</form>
-<form id="resetlogin">
-    <fieldset>
-        <legend>Reset Log in</legend>
-        <label>username<input type="text" name="login"></label>
-        <label>password<input type="password" name="password"></label>
-        <button type="submit">login</button>
-    </fieldset>
-</form>
-<form id="resetclosesession">
-    <fieldset>
-        <legend>reset closeSession</legend>
-        <label>token<input type="text" name="token"></label>
-        <button type="submit">token</button>
-    </fieldset>
-</form>
-<form id="resetDeleteID"> 
-    <fieldset>
-        <legend>reset delete id</legend>
-        <label>token<input type="text" name="token"></label>
-        <label>field<input type="text" name="field"></label>
-        <label>value<input type="text" name="value"></label>
-        <button type="submit">resetDeleteID</button>
-    </fieldset>
-</form>
-{{!-- <form id="token">
-    <fieldset>
-        <legend>test token</legend>
-        <label><input type="text" name="token"></label>
-        <button type="submit">token</button>
-    </fieldset>
+    </form>
+    <form id="login">
+        <fieldset>
+            <legend>flesh Log in</legend>
+            <label>username<input type="text" name="login"></label>
+            <label>password<input type="password" name="password"></label>
+            <button type="submit">login</button>
+        </fieldset>
+    </form>
+    <form id="killtoken">
+        <fieldset>
+            <legend>flesh kill token</legend>
+            <label><input type="text" name="token"></label>
+            <button type="submit">token</button>
+        </fieldset>
+    </form>
+    <form id="makeQRcode">
+        <fieldset>
+            <legend>makeQRcode</legend>
+            <label><input type="number" name="add"></label>
+            <button type="submit">add qr-code</button>
+        </fieldset>
+    </form>
+    <form id="makebarcode">
+        <fieldset>
+            <legend>makebarcode</legend>
+            <label><input type="number" name="add"></label>
+            <button type="submit">add barcode</button>
+        </fieldset>
+    </form>
+    {{!-- надо доделать getNewID token, barcode, qrcode, type, role --}}
+    {{!-- 'MASTER', 'SLAVE', 'NOTHING' --}}
+    <form id="getNewID">
+        <fieldset>
+            <legend>flesh getNewID</legend>
+            <label>token<input type="text" name="token"></label>
+            <label>barcode<input type="text" name="barcode"></label>
+            <label>qrcode<input type="text" name="qrcode"></label>
+            <label>type<input type="text" name="type"></label>
+            <label>role
+                <select name="role">
+                    <option value="MASTER">MASTER</option>
+                    <option value="SLAVE">SLAVE</option>
+                    <option value="NOTHING">NOTHING</option>
+                </select></label>
+            <button type="submit">getNewID</button>
+        </fieldset>
+    </form>
+    {{!-- token, id, mac --}}
+    <form id="setMAC">
+        <fieldset>
+            <legend>flesh setMAC</legend>
+            <label>token<input type="text" name="token"></label>
+            <label>id<input type="text" name="id"></label>
+            <label>mac<input type="text" name="mac"></label>
+            <button type="submit">getNewID</button>
+        </fieldset>
+    </form>
+    {{!-- token, id, prodTime и fwVersion --}}
+    <form id="prodReport">
+        <fieldset>
+            <legend>flesh prodReport</legend>
+            <label>token<input type="text" name="token"></label>
+            <label>id<input type="text" name="id"></label>
+            <label>prodTime<input type="text" name="prodTime"></label>
+            <label>fwVersion<input type="text" name="fwVersion"></label>
+            <button type="submit">prodReport</button>
+        </fieldset>
+    </form>
+    <form id="resetlogin">
+        <fieldset>
+            <legend>Reset Log in</legend>
+            <label>username<input type="text" name="login"></label>
+            <label>password<input type="password" name="password"></label>
+            <button type="submit">login</button>
+        </fieldset>
+    </form>
+    <form id="resetclosesession">
+        <fieldset>
+            <legend>reset closeSession</legend>
+            <label>token<input type="text" name="token"></label>
+            <button type="submit">token</button>
+        </fieldset>
+    </form>
+    <form id="resetDeleteID">
+        <fieldset>
+            <legend>reset delete id</legend>
+            <label>token<input type="text" name="token"></label>
+            <label>field<input type="text" name="field"></label>
+            <label>value<input type="text" name="value"></label>
+            <button type="submit">resetDeleteID</button>
+        </fieldset>
+    </form>
+    <form id="testRequest">
+        <fieldset>
+            <legend>test request</legend>
+            <label>some<input type="text" name="token"></label>
+            <label>some<input type="text" name="field"></label>
+            <label>some<input type="text" name="value"></label>
+            <button type="submit">getRestponse</button>
+        </fieldset>
+    </form>
+    <form method="post" action="/testRequest">
+        <fieldset>
+            <legend>test request without js</legend>
+            <label>some<input type="text" name="token"></label>
+            <label>some<input type="text" name="field"></label>
+            <label>some<input type="text" name="value"></label>
+            <button type="submit">getRestponse</button>
+        </fieldset>
+    </form>
+    {{!-- <form id="token">
+        <fieldset>
+            <legend>test token</legend>
+            <label><input type="text" name="token"></label>
+            <button type="submit">token</button>
+        </fieldset>
 
-</form> --}}
-{{!-- <form id="sendemailpass">
-    <fieldset>
-        <legend>Sent email pass</legend>
-        <label>username<input type="text" name="username"></label>
-        <button type="submit">send email pass</button>
-    </fieldset>
+    </form> --}}
+    {{!-- <form id="sendemailpass">
+        <fieldset>
+            <legend>Sent email pass</legend>
+            <label>username<input type="text" name="username"></label>
+            <button type="submit">send email pass</button>
+        </fieldset>
 
-</form> --}}
-{{!-- <form id="newpassword">
-    <fieldset>
-        <legend>New password</legend>
-        <label>new password<input type="text" name="token"></label>
-        <label>new password<input type="password" name="password"></label>
-        <button type="submit">send email pass</button>
-    </fieldset>
+    </form> --}}
+    {{!-- <form id="newpassword">
+        <fieldset>
+            <legend>New password</legend>
+            <label>new password<input type="text" name="token"></label>
+            <label>new password<input type="password" name="password"></label>
+            <button type="submit">send email pass</button>
+        </fieldset>
 
-</form> --}}
-{{!-- <form id="logout">
-    <fieldset>
-        <legend>logout</legend>
-        <label>token<input type="text" name="token"></label>
-        <button type="submit">logout</button>
-    </fieldset>
+    </form> --}}
+    {{!-- <form id="logout">
+        <fieldset>
+            <legend>logout</legend>
+            <label>token<input type="text" name="token"></label>
+            <button type="submit">logout</button>
+        </fieldset>
 
-</form> --}}
-{{!-- <form id="refreshtoken">
-    <fieldset>
-        <legend>refreshtoken</legend>
-        <label>longToken<input type="text" name="longToken"></label>
-        <button type="submit">refreshtoken</button>
-    </fieldset>
-</form> --}}
-{{!-- <form id="test">
-    <fieldset>
-        <legend>test</legend>
-        <label>token<input type="text" name="token"></label>
-        <button type="submit">test</button>
-    </fieldset>
-</form> --}}
-{{!-- <form id="experiment">
-    <label>data<input type="text" name='data'></label>
-    <button type="submit">send data</button>
-</form> --}}
+    </form> --}}
+    {{!-- <form id="refreshtoken">
+        <fieldset>
+            <legend>refreshtoken</legend>
+            <label>longToken<input type="text" name="longToken"></label>
+            <button type="submit">refreshtoken</button>
+        </fieldset>
+    </form> --}}
+    {{!-- <form id="test">
+        <fieldset>
+            <legend>test</legend>
+            <label>token<input type="text" name="token"></label>
+            <button type="submit">test</button>
+        </fieldset>
+    </form> --}}
+    {{!-- <form id="experiment">
+        <label>data<input type="text" name='data'></label>
+        <button type="submit">send data</button>
+    </form> --}}
 </div>
 <script>
     let domen = null
     document.getElementById('chooseEnvironment').addEventListener('submit', (evt) => {
-        evt.preventDefault() 
+        evt.preventDefault()
         const environmentValue = {
             test: {
                 domen: 'localhost'
@@ -471,6 +491,28 @@
                     'Content-Type': 'application/json'
                 }
             ),
+            body
+        })
+    })
+    document.getElementById('testRequest').addEventListener('submit', (evt) => {
+        evt.preventDefault();
+        const form = evt.target
+        /* 
+        <label>some<input type="text" name="token"></label>
+        <label>some<input type="text" name="field"></label>
+        <label>some<input type="text" name="value"></label>
+        
+        */
+        const body = JSON.stringify({
+            token: form.elements.token.value,
+            field: form.elements.field.value,
+            value: form.elements.value.value
+        })
+        fetch(`https://${domen}/testRequest`, {
+            method: 'POST',
+            headers: new Headers({
+                'Content-Type': 'application/json',
+            }),
             body
         })
     })
