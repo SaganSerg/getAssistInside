@@ -188,3 +188,19 @@ CREATE TABLE `sessions`
   `data` mediumtext COLLATE utf8mb4_bin,
   PRIMARY KEY (`session_id`)
 ) ENGINE=InnoDB;
+
+-- данная таблица заведена для того, чтобы быстро починить сервак. По хорошему она должна называться getAssistInsideSessions и в конфигах JS нужно будет исправить.
+CREATE DATABASE getAssistInsideSessions;
+CREATE USER 'admin_getAssistInsideSessions'@'localhost' IDENTIFIED BY 'Vagon_3611';
+GRANT SELECT, INSERT, UPDATE, DELETE  ON sessions.* TO 'admin_getAssistInsideSessions'@'localhost';
+ALTER USER 'admin_getAssistInsideSessions'@'localhost' IDENTIFIED WITH mysql_native_password BY 'Vagon_3611';
+
+USE sessions;
+
+CREATE TABLE `sessions` 
+(
+  `session_id` varchar(128) COLLATE utf8mb4_bin NOT NULL,
+  `expires` int(11) unsigned NOT NULL,
+  `data` mediumtext COLLATE utf8mb4_bin,
+  PRIMARY KEY (`session_id`)
+) ENGINE=InnoDB;
